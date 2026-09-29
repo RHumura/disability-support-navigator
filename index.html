@@ -1,58 +1,46 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disability Support Navigator</title>
-<style>
-body{margin:0;background:#f5f7fb;color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-main{max-width:760px;margin:auto;padding:20px}.card{background:white;border:1px solid #dce3ed;border-radius:18px;padding:24px}
-h1{font-size:30px}.note{color:#5c6678}.progress{height:8px;background:#e5eaf2;border-radius:8px;overflow:hidden}.bar{height:100%;background:#1769e0}
-.option{display:block;border:1px solid #ccd5e3;border-radius:12px;padding:14px;margin:10px 0}.option input{margin-right:10px}
-button{border:0;border-radius:11px;padding:14px 20px;font-size:17px;font-weight:700}.primary{background:#1769e0;color:white;flex:1}.secondary{background:#e9eef6}
-.actions{display:flex;gap:10px;margin-top:20px}.hidden{display:none}.error{display:none;color:#a32626;font-weight:600}
-.result{border:1px solid #d9e1ec;border-radius:14px;padding:15px;margin:12px 0}
-</style></head><body><main><section class="card">
-<h1>Disability Benefits &amp; Support Navigator</h1>
-<p>Answer 15 questions to discover UK benefits and practical support that may be worth checking.</p>
-<p class="note">Guidance only, not an entitlement decision. This prototype stores answers only in this browser.</p>
-<div id="quiz"><div class="progress"><div id="bar" class="bar"></div></div><p id="counter" class="note"></p><h2 id="question"></h2><div id="options"></div><p id="error" class="error">Please choose an answer.</p>
-<div class="actions"><button id="back" class="secondary" type="button">Back</button><button id="next" class="primary" type="button">Next</button></div></div>
-<div id="results" class="hidden"><h2>Your support plan</h2><p>These areas may be worth investigating based on your answers.</p><div id="cards"></div><button id="restart" class="secondary" type="button">Start again</button></div>
-</section></main>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Disability Support Navigator</title><style>
+:root{--ink:#14213d;--muted:#5f6b7a;--bg:#f5f7fb;--card:#fff;--brand:#155eef;--soft:#eaf1ff;--good:#eaf8ef;--warn:#fff7e6;--line:#dce2ea}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}main{max-width:760px;margin:auto;padding:24px 16px 60px}.hero{padding:24px 0 14px}.eyebrow{font-weight:700;color:var(--brand);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}h1{font-size:clamp(2rem,7vw,3.4rem);line-height:1.02;margin:.35rem 0 .7rem}h2{margin:.2rem 0 1rem}.lead{font-size:1.08rem;color:var(--muted)}.privacy{background:var(--soft);border-radius:14px;padding:12px 14px;margin:18px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 30px rgba(20,33,61,.06)}.progress{height:8px;background:#e8ebf0;border-radius:99px;overflow:hidden;margin-bottom:18px}.bar{height:100%;background:var(--brand);width:0}.count{color:var(--muted);font-size:.9rem}.options{display:grid;gap:10px;margin:18px 0}.option{border:1px solid var(--line);border-radius:13px;padding:13px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}.option:hover{border-color:#9db7ff}.option input{margin-top:4px;transform:scale(1.15)}button{border:0;border-radius:12px;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer}.primary{background:var(--brand);color:white}.secondary{background:#eef1f5;color:var(--ink)}.actions{display:flex;justify-content:space-between;gap:10px}.error{color:#b42318;font-weight:600;min-height:24px}.hidden{display:none}.result{border:1px solid var(--line);border-radius:16px;padding:17px;margin:12px 0;background:white}.badge{display:inline-block;border-radius:99px;padding:5px 9px;font-size:.78rem;font-weight:800;margin-bottom:8px}.check{background:var(--good);color:#166534}.more{background:var(--warn);color:#854d0e}.why{color:var(--muted)}a{color:var(--brand);font-weight:700}.scenario{background:#f0f7ff}.scenarioBtns{display:flex;flex-wrap:wrap;gap:8px}.scenarioBtns button{font-size:.9rem;background:white;border:1px solid var(--line)}.note{font-size:.88rem;color:var(--muted);margin-top:18px}.footer{margin-top:24px;color:var(--muted);font-size:.85rem}@media(max-width:520px){.actions{flex-direction:column-reverse}.actions button{width:100%}}
+</style></head><body><main><section class="hero"><div class="eyebrow">UK disability support</div><h1>Find support that may fit your life.</h1><p class="lead">Answer a short set of questions. We’ll explain which benefits and support routes are worth checking, why they appeared, and what to do next.</p><div class="privacy"><strong>Privacy first:</strong> no name or diagnosis required. This prototype keeps your answers in this browser session and does not send them to us.</div></section>
+<section id="quiz" class="card"><div class="progress"><div id="bar" class="bar"></div></div><div id="count" class="count"></div><h2 id="question"></h2><p id="hint" class="why"></p><div id="options" class="options"></div><div id="error" class="error"></div><div class="actions"><button id="back" class="secondary">Back</button><button id="next" class="primary">Next</button></div></section>
+<section id="results" class="hidden"><div class="card"><div class="eyebrow">Your support map</div><h2>Routes worth exploring</h2><p class="why">This is guidance, not a benefit decision. Where the answer depends on an assessment or missing information, we say so.</p><div id="resultList"></div></div><div class="card scenario" style="margin-top:16px"><h2>What if my circumstances change?</h2><p class="why">See which parts of your support plan you should re-check.</p><div class="scenarioBtns"><button data-s="work">I start a job</button><button data-s="study">I start studying</button><button data-s="partner">My household changes</button><button data-s="care">I become a carer</button></div><div id="scenarioText" class="result hidden"></div></div><button id="restart" class="secondary" style="margin-top:16px">Start again</button><p class="note">Rules can change. Always confirm details with the relevant official service before acting.</p></section><div class="footer">Disability Support Navigator · Prototype v2</div></main>
 <script>
 (function(){
-var qs=[
-["What is your age range?",["Under 16","16–17","18–24","25–State Pension age","State Pension age+"]],
-["Where do you live?",["England","Scotland","Wales","Northern Ireland"]],
-["Which area is most affected?",["Mobility / getting around","Daily living / personal care","Working","Studying","Home accessibility","Several of these"]],
-["How long have these difficulties affected you?",["Less than 3 months","3–6 months","6–12 months","More than 12 months","Expected to be long term"]],
-["What is your current work situation?",["Employed","Self-employed","Unemployed","Unable to work because of health/disability","On sick leave","Retired","Other"]],
-["What best describes your earnings?",["No earnings","Under £1,000 a month","£1,000–£2,000 a month","Over £2,000 a month","Prefer not to say"]],
-["Are you studying or planning to study?",["No","Part-time","Full-time","Planning to start"]],
-["Who lives in your household?",["Alone","Partner","Children","Partner and children","Other"]],
-["Does your partner work?",["Yes","No","Not applicable","Prefer not to say"]],
-["Do you receive disability or income-related benefits?",["Yes","No","I am not sure"]],
-["What is your housing situation?",["Social housing","Private rental","Homeowner","Temporary accommodation","Living with family/friends","Other"]],
-["Do you need disability-related changes to your home?",["Yes","No","Not sure"]],
-["Does someone regularly provide unpaid care or support?",["Yes","No","Sometimes"]],
-["Do you have significant additional disability-related costs?",["Yes","No","Not sure"]],
-["What would you most like help finding?",["Money & benefits","Help with work","Education funding","Housing/adaptations","Transport","Carer support","Grants","Everything that may be relevant"]]
-],i=0,a=[];
-var q=document.getElementById("question"),o=document.getElementById("options"),c=document.getElementById("counter"),b=document.getElementById("bar"),n=document.getElementById("next"),bk=document.getElementById("back"),e=document.getElementById("error");
-function render(){c.textContent="Question "+(i+1)+" of 15";q.textContent=qs[i][0];o.innerHTML="";qs[i][1].forEach(function(x){var l=document.createElement("label"),r=document.createElement("input");l.className="option";r.type="radio";r.name="answer";r.value=x;if(a[i]===x)r.checked=true;l.appendChild(r);l.appendChild(document.createTextNode(x));o.appendChild(l)});bk.style.visibility=i?"visible":"hidden";n.textContent=i===14?"See my support plan":"Next";b.style.width=((i+1)/15*100)+"%";e.style.display="none"}
-function pick(){var x=document.querySelector('input[name="answer"]:checked');return x?x.value:null}
-n.onclick=function(){var x=pick();if(!x){e.style.display="block";return}a[i]=x;if(i<14){i++;render()}else results()};
-bk.onclick=function(){if(i){i--;render()}};
-function add(t,s){var d=document.createElement("div");d.className="result";d.innerHTML="<h3></h3><p></p>";d.querySelector("h3").textContent=t;d.querySelector("p").textContent=s;document.getElementById("cards").appendChild(d)}
-function results(){document.getElementById("quiz").className="hidden";document.getElementById("results").className="";document.getElementById("cards").innerHTML="";
-if(a[2]==="Mobility / getting around"||a[2]==="Daily living / personal care"||a[2]==="Several of these")add(a[1]==="Scotland"?"Adult Disability Payment / disability support":"PIP / disability support","Your answers indicate functional difficulties that make disability support worth checking. Detailed eligibility criteria still apply.");
-if(a[4]==="Employed"||a[4]==="Self-employed"||a[4]==="On sick leave")add("Access to Work","Employment-related disability support may be worth checking.");
-if(a[6]!=="No")add("Disabled Students’ Allowance","Study-related disability support may be worth checking. Student status can also affect some benefits.");
-if(a[11]==="Yes"||a[2]==="Home accessibility")add("Housing adaptations","Home adaptation support may be relevant. The route depends on nation, tenure and local authority.");
-if(a[2]==="Mobility / getting around"||a[2]==="Several of these")add("Blue Badge / transport support","Mobility-related transport support may be worth checking.");
-if(a[12]!=="No")add("Carer support","Support for an unpaid carer may be worth checking.");
-add("Benefits check","Universal Credit, ESA and other support may be relevant depending on income, household circumstances and health-related work capability.");
-add("Grants and additional support","Charitable grants and local support may help with some disability-related costs.");
-window.scrollTo(0,0)}
-document.getElementById("restart").onclick=function(){a=[];i=0;document.getElementById("results").className="hidden";document.getElementById("quiz").className="";render()};
-render();
+const Q=[
+ {id:'nation',q:'Where in the UK do you live?',o:['England','Scotland','Wales','Northern Ireland']},
+ {id:'age',q:'What is your age range?',o:['Under 16','16–17','18–65','66 or over']},
+ {id:'impact',q:'Which area affects you most day to day?',h:'Choose the closest answer for now. A future version will allow multiple selections.',o:['Everyday personal tasks','Moving around or journeys','Working','Studying','Accessing my home','Several of these']},
+ {id:'duration',q:'How long are these difficulties expected to affect you?',o:['Less than 3 months','3–11 months','12 months or more','Not sure']},
+ {id:'work',q:'What best describes your work situation?',o:['Not working','Employed','Self-employed','Starting or returning to paid work soon','Looking for work']},
+ {id:'worklimit',q:'Does your health or disability limit how much work you can do?',o:['Yes','No','Not sure']},
+ {id:'income',q:'Which best describes your household income situation?',h:'We do not need exact figures at this stage.',o:['Low income or no earnings','Some earnings','Higher earnings','Not sure']},
+ {id:'study',q:'Are you studying or planning to study?',o:['No','Full-time now','Part-time now','Planning to start','Not sure']},
+ {id:'benefit',q:'Do you currently receive a disability benefit such as PIP, ADP or DLA?',o:['Yes','No','Applied / waiting','Not sure']},
+ {id:'uc',q:'Do you currently receive Universal Credit?',o:['Yes','No','Applied / waiting','Not sure']},
+ {id:'housing',q:'What is your housing situation?',o:['Renting','Own home','Temporary accommodation','Living with family/friends','Care or nursing accommodation','Other']},
+ {id:'adapt',q:'Do you need changes to make your home safer or more accessible?',o:['Yes','No','Maybe / not assessed']},
+ {id:'carer',q:'Does someone regularly provide unpaid care or support to you?',o:['Yes','No','Sometimes']},
+ {id:'travel',q:'Does your disability make travel or getting around difficult?',o:['Yes','No','Sometimes']},
+ {id:'goal',q:'What would you most like help with first?',o:['Money and benefits','Work','Education','Housing and adaptations','Transport','Carer support','Everything']}
+];
+let i=0,A={}; const $=id=>document.getElementById(id), opts=$('options');
+function render(){let x=Q[i];$('count').textContent=`Question ${i+1} of ${Q.length}`;$('bar').style.width=((i+1)/Q.length*100)+'%';$('question').textContent=x.q;$('hint').textContent=x.h||'';opts.innerHTML='';x.o.forEach(v=>{let l=document.createElement('label');l.className='option';let r=document.createElement('input');r.type='radio';r.name='answer';r.value=v;if(A[x.id]===v)r.checked=true;let s=document.createElement('span');s.textContent=v;l.append(r,s);opts.appendChild(l)});$('back').style.visibility=i?'visible':'hidden';$('next').textContent=i===Q.length-1?'Show my support map':'Next';$('error').textContent=''}
+function chosen(){let e=document.querySelector('input[name=answer]:checked');return e&&e.value}
+$('next').onclick=()=>{let v=chosen();if(!v){$('error').textContent='Please choose an answer to continue.';return}A[Q[i].id]=v;if(i<Q.length-1){i++;render()}else showResults()};$('back').onclick=()=>{if(i){i--;render()}};
+const LINKS={pip:'https://www.gov.uk/pip',uc:'https://www.gov.uk/health-conditions-disability-universal-credit',atw:'https://www.gov.uk/access-to-work',dsa:'https://www.gov.uk/disabled-students-allowance-dsa',badge:'https://www.gov.uk/apply-blue-badge',dfg:'https://www.gov.uk/disabled-facilities-grants',carer:'https://www.gov.uk/carers-allowance'};
+function add(arr,status,title,why,next,key){arr.push({status,title,why,next,key})}
+function build(){let r=[];let gb=A.nation!=='Northern Ireland';let adult=A.age==='18–65';let long=A.duration==='12 months or more';let daily=['Everyday personal tasks','Moving around or journeys','Several of these'].includes(A.impact);
+ if(gb&&adult&&daily) add(r,'check',A.nation==='Scotland'?'Adult Disability Payment / disability benefit':'Personal Independence Payment (PIP)','You reported long-term or potentially significant difficulty with daily activities or mobility. Disability benefits look at how your condition affects you, not simply the diagnosis.','Check the activity rules and application route.','pip');
+ else if(gb&&adult&&(A.duration==='Not sure'||daily)) add(r,'more','Disability benefit','Your answers suggest this may be relevant, but duration and functional-impact details matter.','Check the official criteria before ruling it in or out.','pip');
+ if(gb&&A.worklimit==='Yes'&&(A.income==='Low income or no earnings'||A.uc==='Yes')) add(r,'check','Universal Credit health support / Work Capability Assessment','You said your condition limits work and your answers indicate Universal Credit may already be relevant. A Work Capability Assessment can affect work requirements and additional amounts.','If you claim UC, report the health condition and follow the fit-note/WCA process.','uc');
+ if(gb&&['Employed','Self-employed','Starting or returning to paid work soon'].includes(A.work)) add(r,'check','Access to Work','You are in paid work, self-employment, or close to starting/returning. Access to Work may help with practical disability-related workplace support.','Check eligibility and apply as early as possible.','atw');
+ if(A.nation==='England'&&['Full-time now','Part-time now','Planning to start'].includes(A.study)) add(r,'check','Disabled Students’ Allowance (DSA)','You are studying or planning higher education. DSA can help with study-related disability costs for eligible courses and students.','Check course and personal eligibility with Student Finance England.','dsa');
+ if(A.travel!=='No') add(r,'check','Blue Badge / mobility support','You reported difficulty travelling or getting around. Local eligibility rules and evidence requirements apply.','Check your nation or council’s Blue Badge route.','badge');
+ if(A.adapt!=='No') add(r,'check','Home adaptations support','You said your home may need accessibility changes. In England and Wales, Disabled Facilities Grants are one possible route; other nations have different arrangements.','Ask your council/local authority for an assessment and check the appropriate adaptation scheme.','dfg');
+ if(A.carer!=='No') add(r,'more','Support for your unpaid carer','You said someone provides unpaid care. Their eligibility depends on the care they provide, your benefits and their earnings or circumstances.','Check Carer’s Allowance and request a carer’s assessment where relevant.','carer');
+ if(A.nation==='Northern Ireland') add(r,'more','Northern Ireland-specific benefits and disability support','Several schemes in Great Britain have separate Northern Ireland rules or services.','Use nidirect to check the NI equivalents before acting.',null);
+ return r}
+function showResults(){$('quiz').classList.add('hidden');$('results').classList.remove('hidden');let list=$('resultList');list.innerHTML='';let rr=build();if(!rr.length){list.innerHTML='<div class="result"><strong>We need more detail.</strong><p class="why">Your current answers do not strongly indicate one of the prototype routes. This does not mean no support is available.</p></div>';return}rr.forEach(x=>{let d=document.createElement('div');d.className='result';let b=document.createElement('span');b.className='badge '+(x.status==='check'?'check':'more');b.textContent=x.status==='check'?'Worth checking':'More information needed';let h=document.createElement('h3');h.textContent=x.title;let p=document.createElement('p');p.className='why';p.textContent=x.why;let n=document.createElement('p');n.innerHTML='<strong>Next step:</strong> ';n.append(document.createTextNode(x.next+' '));if(x.key&&LINKS[x.key]){let a=document.createElement('a');a.href=LINKS[x.key];a.target='_blank';a.rel='noopener';a.textContent='Official guidance';n.appendChild(a)}d.append(b,h,p,n);list.appendChild(d)})}
+ document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{let t={work:'Starting paid work can affect means-tested benefits, but may also open Access to Work support. Re-check earnings, hours, UC and workplace-adjustment support.',study:'Starting study can affect Universal Credit and student finance. Re-check UC student rules before enrolling and explore disability-related study support such as DSA where applicable.',partner:'Moving in with or separating from a partner can change means-tested benefits because household income and circumstances may be assessed together. Re-check UC and council support.',care:'If you become an unpaid carer, check carer-specific support and how it interacts with any benefits you already receive.'}[b.dataset.s];$('scenarioText').textContent=t;$('scenarioText').classList.remove('hidden')});
+$('restart').onclick=()=>{i=0;A={};$('results').classList.add('hidden');$('quiz').classList.remove('hidden');render();window.scrollTo(0,0)};render();
 })();
 </script></body></html>
